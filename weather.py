@@ -13,10 +13,10 @@ import json
 import re
 import datetime
 
-URL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx?key=6ae662550dfe401a9d7195421212706&q=Bengaluru&format=json&date=2011-01-01&enddate=2021-01-01&includelocation=yes&tp=24"
+URL = "http://api.worldweatheronline.com/premium/v1/past-weather.ashx?key=6ae662550dfe401a9d7195421212706&q=Bengaluru&format=json&date=2011-01-01&enddate=2021-07-01&includelocation=yes&tp=24"
 
 whole_weather = pd.DataFrame()
-for i in range (100):
+for i in range (110):
     split = URL.split("&")
     subs = "date"
     res = [x for x in split if re.match(subs, x)]
@@ -42,7 +42,7 @@ for i in range (100):
 #Daywise data
 weather_daywise=whole_weather[["date","maxtempC","maxtempF","mintempC","mintempF","avgtempC","avgtempF"]]
 print(weather_daywise)
-weather_daywise.to_excel("daywisedata.xlsx",index=False)
+weather_daywise.to_csv("daywisedata.csv",index=False)
 
 #Converting Hourly Data in normalized Form
 hourly=whole_weather['hourly']
@@ -55,5 +55,3 @@ for c in cols_to_extract_value:
 # hourwise=pd.json_normalize(json.loads(df.to_json(orient='records')))
 # print(hourwise)
 hourwise.to_csv("hourwise.csv",index=False)
-
-
