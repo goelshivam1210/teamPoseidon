@@ -37,6 +37,8 @@ for i in range (100):
     whole_weather = whole_weather.append(weather, ignore_index=True)
     # print ("whole weather = {}".format(whole_weather))
 
+# import IPython; import sys; IPython.embed(); sys.exit(1)
+
 #Daywise data
 weather_daywise=whole_weather[["date","maxtempC","maxtempF","mintempC","mintempF","avgtempC","avgtempF"]]
 print(weather_daywise)
@@ -44,9 +46,14 @@ weather_daywise.to_excel("daywisedata.xlsx",index=False)
 
 #Converting Hourly Data in normalized Form
 hourly=whole_weather['hourly']
-df=pd.DataFrame(dict([(k,pd.Series(v)) for k,v in hourly.items()]))
-hourwise=pd.json_normalize(json.loads(df.to_json(orient='records')))
-print(hourwise)
+hourwise = pd.DataFrame(hourly.apply(lambda x:x[0]).tolist())
+cols_to_extract_value = ["weatherIconUrl", "weatherDesc"]
+for c in cols_to_extract_value:
+
+    hourwise[c] = hourwise[c].apply(lambda x:x[0].get("value"))
+# df=pd.DataFrame(dict([(k,pd.Series(v)) for k,v in hourly.items()]))
+# hourwise=pd.json_normalize(json.loads(df.to_json(orient='records')))
+# print(hourwise)
 hourwise.to_csv("hourwise.csv",index=False)
 
 
