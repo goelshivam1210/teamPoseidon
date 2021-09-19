@@ -9,7 +9,7 @@ import tensorflow as tf
 import numpy as np
 import pickle
 
-from model_utils import SaveableModel
+from utils import SaveableModel, dataset_to_arrays
 
 # pathing
 data_dir = Path("data")
@@ -41,6 +41,9 @@ EPOCHS = 100 # hyperparameter
 FORECAST_LENGTH = 90
 
 HISTORY_LENGTH = 10
+
+MONSOON_WEIGHT = 20
+
 
 
 # data loading
@@ -97,19 +100,6 @@ def get_windowed_dataset(
     )
     return dataset, future_dataset
 
-def dataset_to_arrays(dataset, flatten=True, last_y=True):
-    all_xs = []
-    all_ys = []
-    for x, y in dataset.as_numpy_iterator():
-        all_xs.append(x)
-        all_ys.append(y)
-    ys = np.concatenate(all_ys)
-    xs = np.concatenate(all_xs)
-    if flatten:
-        xs = xs.reshape(xs.shape[0], -1)
-    if last_y:
-        ys = ys[:, -1]
-    return xs, ys
 
 historical_dataset, future_dataset  = get_windowed_dataset(
     df[used_cols],# + ["dummy"]],
@@ -124,9 +114,6 @@ historical_ys_series = df[target_col].iloc[-historical_ys.shape[0]:]
 assert (historical_ys_series == historical_ys).all(), "something went wrong with historical y indexes"
 
 future_xs, _ = dataset_to_arrays(future_dataset)
-
-with open(future_data_file, "wb") as f:
-    pickle.dump(future_xs, f)
 
 data_df = pd.DataFrame(np.concatenate([np.arange(historical_ys.shape[0])[:, None], historical_xs, historical_ys[:,None]], axis=-1))
 
@@ -150,9 +137,6 @@ data_dict = {
     "test": {"X":X_test.iloc[:,1:], "y":y_test, "dates": y_test.index},
 }
 
-with open(data_dict_file, "wb") as f:
-    pickle.dump(data_dict, f)
-
 X_means = data_dict["train"]["X"].mean()
 X_stdev = data_dict["train"]["X"].std()
 y_means = data_dict["train"]["y"].mean()
@@ -161,14 +145,19 @@ for partition in data_dict.keys():
     data_dict[partition]["X"] = (data_dict[partition]["X"] - X_means) / X_stdev
     data_dict[partition]["y"] = (data_dict[partition]["y"] - y_means) / y_stdev
 
+with open(data_dict_file, "wb") as f:
+    pickle.dump(data_dict, f)
+
 future_xs = (future_xs - X_means[None,]) / X_stdev[None,:]
 
+with open(future_data_file, "wb") as f:
+    pickle.dump(future_xs, f)
+
 # climate that gets the most rainfall, months of may to october get most rainfall
-monsoon_weight = 20
 for part, d in data_dict.items():
     data_dict[part]["is_monsoon_month"] = (5 <= d["dates"].month) & (d["dates"].month <= 10)
     data_dict[part]["sample_weight"] = np.ones_like(data_dict[part]["is_monsoon_month"]).astype(float)
-    data_dict[part]["sample_weight"][data_dict[part]["is_monsoon_month"]] = monsoon_weight
+    data_dict[part]["sample_weight"][data_dict[part]["is_monsoon_month"]] = MONSOON_WEIGHT
 
 kwargs = dict(
     max_depth=20,
