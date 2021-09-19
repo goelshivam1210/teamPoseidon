@@ -1,6 +1,16 @@
 # teamPoseidon
 ## Code base for the WRI Wave2Web Hackathon 
 
+### Setup
+1. install python requirements
+2. add weather api key from worldweatheronline.com using `export WEATHER_API_KEY=mykey`
+
+### To run the pipeline
+
+1. `python fetch_live_data.py`
+2. `python train.py`
+3. `python predict.py `
+
 ### The repository consists of the following items:
 
 1. Script called [*weather.py*](https://github.com/goelshivam1210/teamPoseidon/blob/main/weather.py) used for collecting and curating the dataset.
