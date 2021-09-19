@@ -48,9 +48,10 @@ import numpy as np
 # strategy = tf.distribute.experimental.TPUStrategy(resolver)
 
 # pathing
-project_dir = Path("gdrive/MyDrive/Assistance/Shivam/teamPoseidon")
-
-data_file = project_dir / "final_dataset_csv.csv"
+# project_dir = Path("gdrive/MyDrive/Assistance/Shivam/teamPoseidon")
+# project_dir = ""
+data_file = "final_dataset_csv.csv"
+# data_file = project_dir / "final_dataset_csv.csv"
 
 # Hypers
 SPLITS = {
@@ -60,7 +61,7 @@ SPLITS = {
 }
 
 # they definitely needs optimization.
-BATCH_SIZE = 64 # bacth size in batch-SGD/variants
+BATCH_SIZE = 64 # batch size in batch-SGD/variants
 BUFFER_SIZE = 10 # for shuffling the dataset
 STEP = 1 # for creation of dataset
 
@@ -70,12 +71,13 @@ EPOCHS = 100 # hyperparameter
 
 FORECAST_LENGTH = 90
 
-HISTORY_LENGTH = 10
+HISTORY_LENGTH = 10 # this needs to be optimized as well.
 
 # data loading
 df = pd.read_csv(data_file, sep=',', na_values=[" ", "&nbsp;"], parse_dates=["FLOW_DATE"], header=0)
 df = df.ffill()
 df = df.set_index("FLOW_DATE")
+
 df["dummy"] = 1
 
 df["RES_LEVEL_FT"]
@@ -229,7 +231,7 @@ data_dict = {
     "validation": {"X":X_valid.iloc[:,1:], "y":y_valid},
     "test": {"X":X_test.iloc[:,1:], "y":y_test},
 }
-
+# these are the data points. 
 X_means = data_dict["train"]["X"].mean()
 X_stdev = data_dict["train"]["X"].std()
 y_means = data_dict["train"]["y"].mean()
@@ -423,7 +425,7 @@ kwargs = dict(
 # mid_model = ensemble.GradientBoostingRegressor(loss="ls", **kwargs)
 # upper_model = ensemble.GradientBoostingRegressor(loss="quantile", alpha=0.9, **kwargs)
 
-lower_model = ensemble.GradientBoostingRegressor(loss="quantile",alpha=0.1,**kwargs,)
+lower_model = ensemble.GradientBoostingRegressor(loss="quantile",alpha=0.1,**kwargs)
 mid_model = ensemble.GradientBoostingRegressor(loss="ls", **kwargs)
 upper_model = ensemble.GradientBoostingRegressor(loss="quantile", alpha=0.9, **kwargs)
 
@@ -440,12 +442,13 @@ for partition, d in data_dict.items():
     y_pred = mid_model.predict(d["X"])
     print(f"{partition} mae:", metrics.mean_absolute_error(rescale_y(d["y"]), rescale_y(y_pred)))
     # multi_step_plot(xs[:, -1], ys, y_pred, title=f"{partition}")
-
+#
+# get the training data set
 partition_name = "train"
 
-xs = data_dict[partition_name]["X"]
-ys = rescale_y(data_dict[partition_name]["y"])
-ypred_lb = rescale_y(lower_model.predict(xs))
+xs = data_dict[partition_name]["X"] # 
+ys = rescale_y(data_dict[partition_name]["y"]) # get the y labels and normalize them
+ypred_lb = rescale_y(lower_model.predict(xs)) 
 ypred_mid = rescale_y(mid_model.predict(xs))
 ypred_ub = rescale_y(upper_model.predict(xs))
 

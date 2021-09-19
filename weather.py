@@ -49,7 +49,6 @@ hourly=whole_weather['hourly']
 hourwise = pd.DataFrame(hourly.apply(lambda x:x[0]).tolist())
 cols_to_extract_value = ["weatherIconUrl", "weatherDesc"]
 for c in cols_to_extract_value:
-
     hourwise[c] = hourwise[c].apply(lambda x:x[0].get("value"))
 # df=pd.DataFrame(dict([(k,pd.Series(v)) for k,v in hourly.items()]))
 # hourwise=pd.json_normalize(json.loads(df.to_json(orient='records')))
