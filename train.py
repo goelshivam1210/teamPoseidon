@@ -17,6 +17,8 @@ data_file = data_dir / "updated_data_set_full.csv"
 data_dict_file = data_dir / "data_dict.pkl"
 future_data_file = data_dir / "future_dataset.pkl"
 
+plot_dir = Path("plots")
+
 model_dir = Path("saved_models")
 model_file = model_dir / "model.pkl"
 ub_model_file = model_dir / "ub_model.pkl"
@@ -181,6 +183,39 @@ model = SaveableModel(y_means, y_stdev, mid_model)
 lb_model = SaveableModel(y_means, y_stdev, lower_model)
 ub_model = SaveableModel(y_means, y_stdev, upper_model)
 
+
+# evaluation
+def generate_plots_for_partition(partition_name):
+    print(f"generating plots for {partition_name}")
+    plt.figure(figsize=(20,10))
+    plt.style.use('tableau-colorblind10')
+    xs = data_dict[partition_name]["X"]
+    ys = model.rescale(data_dict[partition_name]["y"])
+    ypred_lb = lb_model.predict(xs)
+    ypred_mid = model.predict(xs)
+    ypred_ub = ub_model.predict(xs)
+
+    num_past = xs.shape[0]
+
+    num_future = ypred_lb.shape[0]
+
+    x_indices_future = data_dict[partition_name]["dates"] #np.arange(num_future)
+    plt.figure(figsize=(20,10))
+    ticks = plt.xticks(fontsize = 20)
+    ticks = plt.yticks(fontsize = 22)
+    # plot future predictions
+    plt.fill_between(x_indices_future, ypred_lb, ypred_ub, color='b', alpha=0.1, label = 'Predicted Lower/Upper Bound')
+    plt.plot(x_indices_future, ypred_mid, "--", label = 'Predicted Value')
+    plt.plot(x_indices_future, ys, label = 'True Value')
+    plt.legend(fontsize = 22)
+    plt.title(f"{partition_name} Evaluation", fontdict = {'fontsize' : 36})
+
+    plt.savefig(plot_dir / f"{partition_name}_results.png", dpi = 800)
+    plt.close()
+
+generate_plots_for_partition("train")
+generate_plots_for_partition("validation")
+generate_plots_for_partition("test")
 
 result_dict = {}
 for partition, d in data_dict.items():
