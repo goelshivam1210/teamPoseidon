@@ -13,22 +13,23 @@
 
 
 ### The repository consists of the following items:
-
-1. Script called [*weather.py*](https://github.com/goelshivam1210/teamPoseidon/blob/main/weather.py) used for collecting and curating the dataset.
    
-2. Script called [*prelim_analysis.m*](https://github.com/goelshivam1210/teamPoseidon/blob/main/prelim_analysis.m) used for running preliminary model training and analysis using MATLAB. This was done using simple regression and the results are not from time series dataset 
+1. A PBIX (PowerBi Report) named [*SWaRM_Dashboard_with_user_guide_Final.pbix*](https://app.powerbi.com/view?r=eyJrIjoiNTYyM2IzMjktYmJjMC00NmU1LWI0OWEtYTY0YTZmYTVlMmNjIiwidCI6IjYwOTU2ODg0LTEwYWQtNDBmYS04NjNkLTRmMzJjMWUzYTM3YSIsImMiOjF9) to launch the Dashboard which is shown in the demonstration video.
+   
+2. CSV file named [*updated_data_set_full.csv*](https://github.com/goelshivam1210/teamPoseidon/blob/main/data/updated_data_set_full.csv) which contains the final dataset used for prediction. These are raw values.
 
-3. Jupyter Notebook called [*ReservoirEDA.ipynb*](https://github.com/goelshivam1210/teamPoseidon/blob/main/ReservoirEDA.ipynb) which contains the initial analysis of the given dataset.
+### Other Miscellaneous scripts
 
-4. Jupyter Notebook called [*dataset_play.ipynb*](https://github.com/goelshivam1210/teamPoseidon/blob/main/ReservoirEDA.ipynb) which contains the initial testing of various models for generating the time series dataset and running basic predictive modelling based on the internet search and literature survey.
+3. Script called [*prelim_analysis.m*](https://github.com/goelshivam1210/teamPoseidon/blob/main/prelim_analysis.m) used for running preliminary model training and analysis using MATLAB. This was done using simple regression and the results are not from time series dataset 
 
-5. Jupyter Notebook called [*Wave2Web.ipynb*](https://github.com/goelshivam1210/teamPoseidon/blob/main/wave2web.py) which contains the code used to train models used in the prototype using XGBoost.
+4. Jupyter Notebook called [*ReservoirEDA.ipynb*](https://github.com/goelshivam1210/teamPoseidon/blob/main/ReservoirEDA.ipynb) which contains the initial analysis of the given dataset.
 
-6. Script called [*dbio.py*](https://github.com/goelshivam1210/teamPoseidon/blob/main/dbio.py) used for inserting and updating the mysql database on Linux VM on Azure cloud.
+5. Jupyter Notebook called [*dataset_play.ipynb*](https://github.com/goelshivam1210/teamPoseidon/blob/main/ReservoirEDA.ipynb) which contains the initial testing of various models for generating the time series dataset and running basic predictive modelling based on the internet search and literature survey.
 
-7. CSV file named [*final_dataset_csv.csv*](https://github.com/goelshivam1210/teamPoseidon/blob/main/final_dataset_csv.csv) which contains the final dataset used for prediction. These are raw values.
+6. Jupyter Notebook called [*Wave2Web.ipynb*](https://github.com/goelshivam1210/teamPoseidon/blob/main/wave2web.py) which contains the code used to train models used in the prototype using XGBoost.
 
-8. A PBIX (PowerBi Report) named [*reservoir.pbix*](https://github.com/goelshivam1210/teamPoseidon/blob/main/reservoir.pbix) to launch the Dashboard which is shown in the demonstration video.
+7. Script called [*dbio.py*](https://github.com/goelshivam1210/teamPoseidon/blob/main/dbio.py) used for inserting and updating the mysql database on Linux VM on cloud.
+
 
 ## Dependencies to run the PowerBi Report
 
