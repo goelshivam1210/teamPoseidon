@@ -11,6 +11,7 @@
 2. `python train.py`
 3. `python predict.py `
 
+
 ### The repository consists of the following items:
 
 1. Script called [*weather.py*](https://github.com/goelshivam1210/teamPoseidon/blob/main/weather.py) used for collecting and curating the dataset.
@@ -60,5 +61,9 @@ Use the requirements file to install the dependencies
 Other Dependencies
 
 MATLAB is required to run .m script.
+
+## Note
+
+Please reach out to reachswarm@gmail.com for detailed description about the webapp and the cloud deployment of the SWaRM. We will be happy to discuss the details and provide docker support for the complete deployment of the pipeline. The code in the repository contains the necesarry scripts to train and evaulate the model. However, the complete software pipeline is implemented on a Linux VM hosted on a public cloud platform. 
 
 
